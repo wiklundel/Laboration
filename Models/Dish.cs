@@ -28,7 +28,7 @@ public class Dish
     {
         dishID = cpy.dishID;
         dishName = cpy.dishName;
-        personDishes = cpy.personDishes;
+        personDishes = new List<PersonDish>();
     }
 
 }

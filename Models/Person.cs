@@ -12,8 +12,9 @@ public class Person {
     [Range(0, 120)]
     public int age { get; set; }
 
-    public List<PersonDish>? personDishes { get; set; }
+    public List<PersonDish> personDishes { get; set; }
 
+    // Konstruktorn
     public Person ()
     {
         firstName = "Unknown";
@@ -22,6 +23,7 @@ public class Person {
         personDishes = new List<PersonDish>();
     }
 
+    // Överlagrad konstruktorn
     public Person (string firstName, string lastName, int age)
     {
         this.firstName = FormatName(firstName);
@@ -30,6 +32,17 @@ public class Person {
         personDishes = new List<PersonDish>();
     }
 
+    // Kopieringskonstruktorn
+    public Person (Person cpy)
+    {
+        personID = cpy.personID;
+        firstName = cpy.firstName;
+        lastName = cpy.lastName;
+        age = cpy.age;
+        personDishes = new List<PersonDish>();
+    }
+
+    // Metod för att formatera namn
     private string FormatName(string name)
     {
         if(string.IsNullOrWhiteSpace(name)) return "Unknown";
