@@ -8,14 +8,17 @@ public class PersonDish
     public int PersonID { get; set; }
     public Person? Person { get; set; }
 
+    // Konstruktorn
     public PersonDish() {}
 
+    // Överlagrad konstruktorn
     public PersonDish(int personID, int dishID)
     {
         this.PersonID = personID;
         this.DishID = dishID;
     }
 
+    // Kopieringskonstruktorn
     public PersonDish(PersonDish cpy)
     {
         PersonDishID = cpy.PersonDishID;

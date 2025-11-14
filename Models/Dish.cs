@@ -18,12 +18,14 @@ public class Dish
         PersonDishes = new List<PersonDish>();
     }
 
+    // Överlagrad konstruktorn
     public Dish(string dishName)
     {
         this.DishName = dishName;
         PersonDishes = new List<PersonDish>();
     }
 
+    // Kopieringskonstruktorn
     public Dish (Dish cpy)
     {
         DishID = cpy.DishID;
