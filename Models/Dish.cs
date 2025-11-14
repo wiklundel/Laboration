@@ -3,19 +3,25 @@ using System.ComponentModel.DataAnnotations;
 public class Dish
 {
     [Key]
-    public int DishID {get; set;}
+    public int dishID {get; set;}
 
     [Required, StringLength(80)]
-    public string DishName {get; set;}
+    public string dishName {get; set;}
 
-    public List<PersonDish>? PersonDishes {get; set;}
+    public List<PersonDish>? personDishes {get; set;}
 
     // Konstruktorn
     public Dish()
     {
-        DishName = "Unnamed Dish";
-        PersonDishes = new List<PersonDish>();
+        dishName = "Unnamed Dish";
+        personDishes = new List<PersonDish>();
     }
 
+    public Dish(int dishID, string dishName)
+    {
+        this.dishID = dishID;
+        this.dishName = dishName;
+        personDishes = new List<PersonDish>();
+    }
 
 }

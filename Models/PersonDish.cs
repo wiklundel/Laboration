@@ -1,6 +1,5 @@
 public class PersonDish
 {
-    [Key]
     public int personDishID { get; set; }
     public int dishID { get; set; }
     public Dish? Dish { get; set; }
@@ -17,5 +16,6 @@ public class PersonDish
         this.personDishID = personDishID;
         this.personID = personID;
         this.dishID = dishID;
+
     }
 }
