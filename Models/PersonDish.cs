@@ -6,12 +6,7 @@ public class PersonDish
     public int personID { get; set; }
     public Person? Person { get; set; }
 
-    public PersonDish()
-    {
-        
-    }
-
-    public PersonDish(int PersonDishID, int personID, int dishID)
+    public PersonDish(int personDishID, int personID, int dishID)
     {
         this.personDishID = personDishID;
         this.personID = personID;
