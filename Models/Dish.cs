@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Contracts;
 
 public class Dish
 {
@@ -8,7 +9,7 @@ public class Dish
     [Required, StringLength(80)]
     public string dishName {get; set;}
 
-    public List<PersonDish>? personDishes {get; set;}
+    public List<PersonDish> personDishes {get; set;}
 
     // Konstruktorn
     public Dish()
@@ -17,11 +18,17 @@ public class Dish
         personDishes = new List<PersonDish>();
     }
 
-    public Dish(int dishID, string dishName)
+    public Dish(string dishName)
     {
-        this.dishID = dishID;
         this.dishName = dishName;
         personDishes = new List<PersonDish>();
+    }
+
+    public Dish (Dish cpy)
+    {
+        dishID = cpy.dishID;
+        dishName = cpy.dishName;
+        personDishes = cpy.personDishes;
     }
 
 }
