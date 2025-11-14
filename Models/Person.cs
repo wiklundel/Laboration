@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 public class Person {
     public int personID { get; set; }
 
@@ -21,12 +22,17 @@ public class Person {
         personDishes = new List<PersonDish>();
     }
 
-    public Person (int personID, string firstName, string lastName, int age)
+    public Person (string firstName, string lastName, int age)
     {
-        this.personID = personID;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.firstName = FormatName(firstName);
+        this.lastName = FormatName(lastName);
         this.age = age;
         personDishes = new List<PersonDish>();
+    }
+
+    private string FormatName(string name)
+    {
+        if(string.IsNullOrWhiteSpace(name)) return "Unknown";
+        return char.ToUpper(name[0]) + name.Substring(1).ToLower();
     }
 }
