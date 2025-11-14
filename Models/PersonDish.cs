@@ -11,7 +11,7 @@ public class PersonDish
     // Konstruktorn
     public PersonDish() {}
 
-    // Överlagrad konstruktorn
+    // Konstruktorn2
     public PersonDish(int personID, int dishID)
     {
         this.PersonID = personID;

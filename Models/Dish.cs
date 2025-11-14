@@ -18,7 +18,7 @@ public class Dish
         PersonDishes = new List<PersonDish>();
     }
 
-    // Överlagrad konstruktorn
+    // Konstruktorn2
     public Dish(string dishName)
     {
         this.DishName = dishName;

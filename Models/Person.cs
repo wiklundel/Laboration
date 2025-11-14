@@ -25,7 +25,7 @@ public class Person {
         PersonDishes = new List<PersonDish>();
     }
 
-    // Överlagrad konstruktorn
+    // Konstruktorn 2
     public Person (string firstName, string lastName, int age)
     {
         this.FirstName = FormatName(firstName);
