@@ -9,4 +9,13 @@ public class Dish
     public string DishName {get; set;}
 
     public List<PersonDish>? PersonDishes {get; set;}
+
+    // Konstruktorn
+    public Dish()
+    {
+        DishName = "Unnamed Dish";
+        PersonDishes = new List<PersonDish>();
+    }
+
+
 }
