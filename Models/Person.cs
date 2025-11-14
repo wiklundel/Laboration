@@ -1,45 +1,47 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using System.Collections.Generic;
+
 public class Person {
-    public int personID { get; set; }
+    public int PersonID { get; set; }
 
     [Required, MaxLength(50)]
-    public string firstName { get; set; }
+    public string FirstName { get; set; }
 
     [Required, MaxLength(50)]
-    public string lastName { get; set; }
+    public string LastName { get; set; }
 
     [Range(0, 120)]
-    public int age { get; set; }
+    public int Age { get; set; }
 
-    public List<PersonDish> personDishes { get; set; }
+    public List<PersonDish> PersonDishes { get; set; }
 
     // Konstruktorn
     public Person ()
     {
-        firstName = "Unknown";
-        lastName = "Unknown";
-        age = 0;
-        personDishes = new List<PersonDish>();
+        FirstName = "Unknown";
+        LastName = "Unknown";
+        Age = 0;
+        PersonDishes = new List<PersonDish>();
     }
 
     // Överlagrad konstruktorn
     public Person (string firstName, string lastName, int age)
     {
-        this.firstName = FormatName(firstName);
-        this.lastName = FormatName(lastName);
-        this.age = age;
-        personDishes = new List<PersonDish>();
+        this.FirstName = FormatName(firstName);
+        this.LastName = FormatName(lastName);
+        this.Age = age;
+        PersonDishes = new List<PersonDish>();
     }
 
     // Kopieringskonstruktorn
     public Person (Person cpy)
     {
-        personID = cpy.personID;
-        firstName = cpy.firstName;
-        lastName = cpy.lastName;
-        age = cpy.age;
-        personDishes = new List<PersonDish>();
+        PersonID = cpy.PersonID;
+        FirstName = cpy.FirstName;
+        LastName = cpy.LastName;
+        Age = cpy.Age;
+        PersonDishes = new List<PersonDish>();
     }
 
     // Metod för att formatera namn

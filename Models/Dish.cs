@@ -4,31 +4,31 @@ using System.Diagnostics.Contracts;
 public class Dish
 {
     [Key]
-    public int dishID {get; set;}
+    public int DishID {get; set;}
 
     [Required, StringLength(80)]
-    public string dishName {get; set;}
+    public string DishName {get; set;}
 
-    public List<PersonDish> personDishes {get; set;}
+    public List<PersonDish> PersonDishes {get; set;}
 
     // Konstruktorn
     public Dish()
     {
-        dishName = "Unnamed Dish";
-        personDishes = new List<PersonDish>();
+        DishName = "Unnamed Dish";
+        PersonDishes = new List<PersonDish>();
     }
 
     public Dish(string dishName)
     {
-        this.dishName = dishName;
-        personDishes = new List<PersonDish>();
+        this.DishName = dishName;
+        PersonDishes = new List<PersonDish>();
     }
 
     public Dish (Dish cpy)
     {
-        dishID = cpy.dishID;
-        dishName = cpy.dishName;
-        personDishes = new List<PersonDish>();
+        DishID = cpy.DishID;
+        DishName = cpy.DishName;
+        PersonDishes = new List<PersonDish>();
     }
 
 }

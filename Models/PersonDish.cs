@@ -1,24 +1,26 @@
 public class PersonDish
 {
-    public int personDishID { get; set; }
+    public int PersonDishID { get; set; }
 
-    public int dishID { get; set; }
+    public int DishID { get; set; }
     public Dish? Dish { get; set; }
 
-    public int personID { get; set; }
+    public int PersonID { get; set; }
     public Person? Person { get; set; }
+
+    public PersonDish() {}
 
     public PersonDish(int personID, int dishID)
     {
-        this.personID = personID;
-        this.dishID = dishID;
+        this.PersonID = personID;
+        this.DishID = dishID;
     }
 
     public PersonDish(PersonDish cpy)
     {
-        personDishID = cpy.personDishID;
-        personID = cpy.personID;
-        dishID = cpy.dishID;
+        PersonDishID = cpy.PersonDishID;
+        PersonID = cpy.PersonID;
+        DishID = cpy.DishID;
         Person = cpy.Person;
         Dish = cpy.Dish;
     }
