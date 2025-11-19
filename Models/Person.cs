@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Collections.Generic;
 
+namespace Laboration.Models;
 public class Person {
     public int PersonID { get; set; }
 

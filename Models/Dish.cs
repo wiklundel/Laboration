@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Contracts;
 
+namespace Laboration.Models;
 public class Dish
 {
     [Key]

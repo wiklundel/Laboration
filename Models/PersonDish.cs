@@ -1,3 +1,4 @@
+namespace Laboration.Models;
 public class PersonDish
 {
     public int PersonDishID { get; set; }
