@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Laboration.Models;
 
-namespace LABORATION.Controllers
+namespace Laboration.Controllers
 {
     public class PersonController : Controller
     {
