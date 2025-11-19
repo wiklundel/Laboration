@@ -32,5 +32,5 @@ public class Dish
         DishName = cpy.DishName;
         PersonDishes = new List<PersonDish>();
     }
-
+    
 }
