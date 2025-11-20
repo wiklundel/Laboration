@@ -25,6 +25,17 @@ public class PersonController : Controller
         return View();
     }
 
+    [HttpPost]
+    public IActionResult Create(Person person)
+    {
+        if (ModelState.IsValid)
+        {
+            personList.Add(person);
+            return RedirectToAction("Persons");
+        }
+        return View(person);
+    }
+
     public IActionResult Details()
     {
         return View();
