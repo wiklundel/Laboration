@@ -7,31 +7,28 @@ public class Person {
     public int PersonID { get; set; }
 
     [Required, MaxLength(50)]
-    public string FirstName { get; set; }
+    public string? FirstName { get; set; }
 
     [Required, MaxLength(50)]
-    public string LastName { get; set; }
+    public string? LastName { get; set; }
 
     [Range(0, 120)]
-    public int Age { get; set; }
+    public int? Age { get; set; }
 
-    public List<PersonDish> PersonDishes { get; set; }
+    public List<PersonDish>? PersonDishes { get; set; }
 
     // Konstruktorn
     public Person ()
     {
-        FirstName = "Unknown";
-        LastName = "Unknown";
-        Age = 0;
         PersonDishes = new List<PersonDish>();
     }
 
     // Konstruktorn 2
     public Person (string firstName, string lastName, int age)
     {
-        this.FirstName = FormatName(firstName);
-        this.LastName = FormatName(lastName);
-        this.Age = age;
+        FirstName = FormatName(firstName);
+        LastName = FormatName(lastName);
+        Age = age;
         PersonDishes = new List<PersonDish>();
     }
 

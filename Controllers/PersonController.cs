@@ -20,18 +20,39 @@ public class PersonController : Controller
 
     public IActionResult Create()
     {
-        return View();
+        ViewBag.Dishes = new List<Dish>
+        {
+            new Dish() { DishID = 1, DishName = "Spaghetti Bolognese" },
+            new Dish() { DishID = 2, DishName = "Chicken Curry" },
+            new Dish() { DishID = 3, DishName = "Vegetable Stir Fry" }
+        };
+        return View(new Person());
     }
 
     [HttpPost]
-    public IActionResult Create(Person person)
-    {
-        if (ModelState.IsValid)
+    public IActionResult Create(Person person, List<int>? SelectedDishes)
+    {   
+        // 1. Kräv minst en dish
+        if (SelectedDishes == null || !SelectedDishes.Any())
         {
-            personList.Add(person);
-            return RedirectToAction("Persons");
+            ModelState.AddModelError("SelectedDishes", "Du måste välja minst en signaturrätt.");
         }
-        return View(person);
+
+        if (!ModelState.IsValid)
+        {
+            return Create();
+        }
+        
+        foreach (var dishID in SelectedDishes)
+        {
+            person.PersonDishes.Add(new PersonDish 
+            {
+                PersonID = person.PersonID,
+                DishID = dishID
+            });
+        }
+        personList.Add(person);
+        return RedirectToAction("Persons");
     }
 
     public IActionResult Details()

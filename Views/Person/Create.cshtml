@@ -1,7 +1,7 @@
-@model Laboration.Models.Person;
+@model Laboration.Models.Person
 
 @{
-    ViewData["Title"] = "Create Person";
+    var dishes = ViewBag.Dishes as List<Laboration.Models.Dish>;
 }
 
 <h1>Skapa ny person</h1>
@@ -10,23 +10,33 @@
 
     <div class="mb-3">
         <label asp-for="FirstName" class="form-label">Förnamn</label>
-        <input asp-for="FirstName" class="form-control" />
+        <input asp-for="FirstName" class="form-control placeholder="Förnamn"" />
     </div>
 
     <div class="mb-3">
         <label asp-for="LastName" class="form-label">Efternamn</label>
-        <input asp-for="LastName" class="form-control" />
+        <input asp-for="LastName" class="form-control placeholder="Efternamn"" />
     </div>
 
     <div class="mb-3">
         <label asp-for="Age" class="form-label">Ålder</label>
-        <input asp-for="Age" type="number" class="form-control" />
+        <input asp-for="Age" type="number" class="form-control placeholder="Ålder"" />
     </div>
 
+    @foreach (var dish in dishes)
+{
     <div class="form-check mb-3">
-        <input asp-for="PersonDishes" class="form-check-input" type="checkbox" />
-        <label asp-for="PersonDishes" class="form-check-label">Har signaturrätt</label>
-    </div>
+        <input 
+            class="form-check-input"
+            type="checkbox"
+            name="SelectedDishes"
+            value="@dish.DishID"
+            id="dish_@dish.DishID" />
 
+        <label class="form-check-label" for="dish_@dish.DishID">
+            @dish.DishName
+        </label>
+    </div>
+}
     <button type="submit" class="my-btn">Spara</button>
 </form>
