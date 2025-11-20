@@ -5,6 +5,7 @@
 }
 
 <h1>Persons</h1>
+<a class="create-btn" asp-area="" asp-controller="Person" asp-action="Create">Create new</a>
 <table class="table">
     <thead>
         <tr>
@@ -16,9 +17,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Age)
             </th>
             <th></th>
         </tr>
@@ -36,12 +34,7 @@
                 @Html.DisplayFor(modelItem => item.LastName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Age)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.PersonID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.PersonID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.PersonID })
+                <a class="nav-link text-dark" asp-area="" asp-controller="Person" asp-action="Details">Details</a>
             </td>
         </tr>
 }

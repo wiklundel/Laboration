@@ -12,9 +12,21 @@ public class PersonController : Controller
         new Person() { FirstName = "Charlie", LastName = "Carlsson", Age = 35 }
     };
 
+    
+
     // GET: Person
     public IActionResult Persons()
     {
         return View(personList);    
+    }
+
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    public IActionResult Details()
+    {
+        return View();
     }
 }

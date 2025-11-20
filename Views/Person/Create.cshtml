@@ -1,0 +1,32 @@
+@model Laboration.Models.Person;
+
+@{
+    ViewData["Title"] = "Create Person";
+}
+
+<h1>Skapa ny person</h1>
+
+<form asp-action="Create" method="post" class="mt-3">
+
+    <div class="mb-3">
+        <label asp-for="FirstName" class="form-label">Förnamn</label>
+        <input asp-for="FirstName" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="LastName" class="form-label">Efternamn</label>
+        <input asp-for="LastName" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Age" class="form-label">Ålder</label>
+        <input asp-for="Age" type="number" class="form-control" />
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="PersonDishes" class="form-check-input" type="checkbox" />
+        <label asp-for="PersonDishes" class="form-check-label">Har signaturrätt</label>
+    </div>
+
+    <button type="submit" class="my-btn">Spara</button>
+</form>
