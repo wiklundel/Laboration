@@ -1,54 +1,41 @@
-@model IEnumerable<Laboration.Models.Person>
+@model Laboration.Models.Person
 
-@{
-    ViewData["Title"] = "Details";
-}
-
-<h1>Persons</h1>
+<h1>@Model.FirstName @Model.LastName</h1>
 <a class="create-btn" asp-area="" asp-controller="Person" asp-action="Persons">Back</a>
-<table class="table">
+<table class="table mt-4">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PersonID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Age)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PersonDishes)
-            </th>
-            <th></th>
+            <th>Person ID</th>
+            <td>@Model.PersonID</td>
+
+            <th>First Name</th>
+            <td>@Model.FirstName</td>
+
+            <th>Last Name</th>
+            <td>@Model.LastName</td>
+
+            <th>Age</th>
+            <td>@Model.Age</td>
+
+            <th>Dishes</th>
+            <td>
+                @if (Model.PersonDishes != null && Model.PersonDishes.Count > 0)
+                {
+                    <ul>
+                        @foreach (var pd in Model.PersonDishes)
+                        {
+                            <li>@pd.Dish?.DishName</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <span>No dishes assigned.</span>
+                }
+            </td>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PersonID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-             <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Age)
-            </td>
-             <td>
-                @Html.DisplayFor(modelItem => item.PersonDishes)
-            </td>
-            <td>
-                <a class="nav-link text-dark" asp-area="" asp-controller="Person" asp-action="Details">Details</a>
-            </td>
-        </tr>
 }
     </tbody>
 </table>

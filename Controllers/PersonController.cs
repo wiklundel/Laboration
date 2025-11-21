@@ -1,21 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
 using Laboration.Models;
+using Laboration.Helpers;
 
 namespace Laboration.Controllers;
 
 public class PersonController : Controller
 {
-    static IList<Person> personList = new List<Person>
+    private static int _nextPersonId = 1;
+    private const string SessionKeyPersons = "Persons";
+    private List<Person> LoadPersonsFromSession()
     {
-        new Person() { FirstName = "Alice", LastName = "Andersson", Age = 30 },
-        new Person() { FirstName = "Bob", LastName = "Bengtsson", Age = 25 },
-        new Person() { FirstName = "Charlie", LastName = "Carlsson", Age = 35 }
-    };
+        var persons = HttpContext.Session.GetObjectFromJson<List<Person>>(SessionKeyPersons);
+        return persons ?? new List<Person>();
+    }
+    
+    private void SavePersonsToSession(List<Person> persons)
+    {
+        HttpContext.Session.SetObjectAsJson(SessionKeyPersons, persons);
+    }
 
     // GET: Person
     public IActionResult Persons()
     {
-        return View(personList);    
+        var persons = LoadPersonsFromSession();
+        return View(persons);
     }
 
     public IActionResult Create()
@@ -40,23 +48,68 @@ public class PersonController : Controller
 
         if (!ModelState.IsValid)
         {
-            return Create();
+            ViewBag.Dishes = new List<Dish>
+            {
+                new Dish() { DishID = 1, DishName = "Spaghetti Bolognese" },
+                new Dish() { DishID = 2, DishName = "Chicken Curry" },
+                new Dish() { DishID = 3, DishName = "Vegetable Stir Fry" }
+            };
+
+            return View(person);
         }
         
-        foreach (var dishID in SelectedDishes)
-        {
-            person.PersonDishes.Add(new PersonDish 
-            {
-                PersonID = person.PersonID,
-                DishID = dishID
-            });
-        }
-        personList.Add(person);
+        // hämta nuvarande lista från session
+        var persons = LoadPersonsFromSession();
+
+        // sätt unikt ID
+        person.PersonID = _nextPersonId++;
+
+        // lägg till valda rätter
+        persons.Add(person);
+
+
+        // spara tillbaka till session
+        SavePersonsToSession(persons);
+
         return RedirectToAction("Persons");
     }
 
-    public IActionResult Details()
+    public IActionResult Details(int id)
     {
-        return View();
+        var persons = LoadPersonsFromSession();
+        var person = persons.FirstOrDefault(p => p.PersonID == id);
+
+        if (person == null)
+        {
+            return NotFound();
+        }
+
+        return View(person);
+    }
+
+    public IActionResult Delete(int id)
+    {
+        var persons = LoadPersonsFromSession();
+        var person = persons.FirstOrDefault(p => p.PersonID == id);
+
+        if (person == null)
+            return NotFound(); // om någon försöker fuska med URL:en
+
+        return View(person);
+    }
+
+    [HttpPost]
+    public IActionResult DeleteConfirmed(int id)
+    {
+        var persons = LoadPersonsFromSession();
+        var person = persons.FirstOrDefault(p => p.PersonID == id);
+
+        if (person != null)
+        {
+            persons.Remove(person);
+            SavePersonsToSession(persons);   // viktigt!
+        }
+
+        return RedirectToAction("Persons");
     }
 }

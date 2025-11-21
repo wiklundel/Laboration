@@ -1,0 +1,16 @@
+@model Laboration.Models.Person
+
+<h2>Radera person</h2>
+
+<p>Är du säker på att du vill radera denna person?</p>
+
+<ul>
+    <li><strong>Namn:</strong> @Model.FirstName @Model.LastName</li>
+    <li><strong>Ålder:</strong> @Model.Age</li>
+</ul>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" name="id" value="@Model.PersonID" />
+    <button type="submit" class="btn btn-danger">Ja, radera</button>
+    <a asp-action="Persons" class="btn btn-secondary">Avbryt</a>
+</form>

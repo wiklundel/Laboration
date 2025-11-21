@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.SignalR.Protocol
 @model IEnumerable<Laboration.Models.Person>
 
 @{
@@ -19,6 +20,7 @@
                 @Html.DisplayNameFor(model => model.LastName)
             </th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -34,8 +36,14 @@
                 @Html.DisplayFor(modelItem => item.LastName)
             </td>
             <td>
-                <a class="nav-link text-dark" asp-area="" asp-controller="Person" asp-action="Details">Details</a>
+                <a class="nav-link text-dark" asp-area="" asp-controller="Person" asp-action="Details" asp-route-id="@item.PersonID">Details</a>
             </td>
+            <td>
+                <a class="nav-link text-dark" asp-controller="Person" asp-action="Delete" asp-route-id="@item.PersonID" class="text-danger">
+                    Delete
+                </a>
+            </td>
+
         </tr>
 }
     </tbody>
