@@ -2,16 +2,20 @@
 
 <h1>@Model.FirstName @Model.LastName</h1>
 <a class="create-btn" asp-area="" asp-controller="Person" asp-action="Persons">Back</a>
+
 <table class="table mt-4">
     <thead>
         <tr>
-            <th>Person ID</th>
+            <th>ID</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Kön</th>
             <th>Age</th>
             <th>Dishes</th>
         </tr>
+    </thead>
+
+    <tbody>
         <tr>
             <td>@Model.PersonID</td>
             <td>@Model.FirstName</td>
@@ -34,8 +38,5 @@
                 }
             </td>
         </tr>
-    </thead>
-    <tbody>
-}
     </tbody>
 </table>

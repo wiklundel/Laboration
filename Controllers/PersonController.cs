@@ -25,7 +25,7 @@ public class PersonController : Controller
         var persons = LoadPersonsFromSession();
         return View(persons);
     }
-
+    
     private static readonly List<Dish> AvailableDishes = new ()
     {
         new Dish() { DishID = 1, DishName = "Spaghetti Bolognese" },
