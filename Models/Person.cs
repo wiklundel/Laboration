@@ -3,6 +3,13 @@ using System.Text;
 using System.Collections.Generic;
 
 namespace Laboration.Models;
+
+public enum Gender
+{
+    Female,
+    Male,
+    Other
+}
 public class Person {
     public int PersonID { get; set; }
 
@@ -15,13 +22,13 @@ public class Person {
     [Range(0, 120)]
     public int? Age { get; set; }
 
-    public List<PersonDish>? PersonDishes { get; set; }
+    [Required]
+    public Gender Gender { get; set; }
+
+    public List<PersonDish>? PersonDishes { get; set; } = new();
 
     // Konstruktorn
-    public Person ()
-    {
-        PersonDishes = new List<PersonDish>();
-    }
+    public Person () {}
 
     // Konstruktorn 2
     public Person (string firstName, string lastName, int age)

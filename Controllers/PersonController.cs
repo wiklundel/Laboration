@@ -61,8 +61,14 @@ public class PersonController : Controller
         // hämta nuvarande lista från session
         var persons = LoadPersonsFromSession();
 
+        if (persons == null || !persons.Any())
+        {
+            _nextPersonId = 1;
+        } else 
+        {
+            person.PersonID = _nextPersonId++;
+        }
         // sätt unikt ID
-        person.PersonID = _nextPersonId++;
 
         // lägg till valda rätter
         persons.Add(person);
