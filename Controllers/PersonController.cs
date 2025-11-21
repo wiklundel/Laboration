@@ -26,14 +26,18 @@ public class PersonController : Controller
         return View(persons);
     }
 
+    private static readonly List<Dish> AvailableDishes = new ()
+    {
+        new Dish() { DishID = 1, DishName = "Spaghetti Bolognese" },
+        new Dish() { DishID = 2, DishName = "Chicken Curry" },
+        new Dish() { DishID = 3, DishName = "Vegetable Stir Fry" },
+        new Dish() { DishID = 4, DishName = "Beef Stroganoff" },
+        new Dish() { DishID = 5, DishName = "Fish and Chips" }
+    };
+
     public IActionResult Create()
     {
-        ViewBag.Dishes = new List<Dish>
-        {
-            new Dish() { DishID = 1, DishName = "Spaghetti Bolognese" },
-            new Dish() { DishID = 2, DishName = "Chicken Curry" },
-            new Dish() { DishID = 3, DishName = "Vegetable Stir Fry" }
-        };
+        ViewBag.Dishes = AvailableDishes;
         return View(new Person());
     }
 
@@ -48,12 +52,7 @@ public class PersonController : Controller
 
         if (!ModelState.IsValid)
         {
-            ViewBag.Dishes = new List<Dish>
-            {
-                new Dish() { DishID = 1, DishName = "Spaghetti Bolognese" },
-                new Dish() { DishID = 2, DishName = "Chicken Curry" },
-                new Dish() { DishID = 3, DishName = "Vegetable Stir Fry" }
-            };
+            ViewBag.Dishes = AvailableDishes;
 
             return View(person);
         }
@@ -61,14 +60,27 @@ public class PersonController : Controller
         // hämta nuvarande lista från session
         var persons = LoadPersonsFromSession();
 
+        // sätt unikt ID
         if (persons == null || !persons.Any())
         {
             _nextPersonId = 1;
-        } else 
-        {
-            person.PersonID = _nextPersonId++;
         }
-        // sätt unikt ID
+        person.PersonID = _nextPersonId++;
+
+        person.PersonDishes = new List<PersonDish>();
+        foreach (var dishId in SelectedDishes)
+        {
+            var dish = AvailableDishes.FirstOrDefault(d => d.DishID == dishId);
+            if (dish != null)
+            {
+                person.PersonDishes.Add(new PersonDish
+                {
+                    PersonID = person.PersonID,
+                    DishID = dish.DishID,
+                    Dish = dish
+                });
+            }
+        }
 
         // lägg till valda rätter
         persons.Add(person);
@@ -99,7 +111,7 @@ public class PersonController : Controller
         var person = persons.FirstOrDefault(p => p.PersonID == id);
 
         if (person == null)
-            return NotFound(); // om någon försöker fuska med URL:en
+            return NotFound();
 
         return View(person);
     }
