@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Laboration.Models;
 using Laboration.Helpers;
+using Laboration.ViewModels;
 
 namespace Laboration.Controllers;
 
@@ -19,13 +20,6 @@ public class PersonController : Controller
         HttpContext.Session.SetObjectAsJson(SessionKeyPersons, persons);
     }
 
-    // GET: Person
-    public IActionResult Persons()
-    {
-        var persons = LoadPersonsFromSession();
-        return View(persons);
-    }
-    
     private static readonly List<Dish> AvailableDishes = new ()
     {
         new Dish() { DishID = 1, DishName = "Spaghetti Bolognese" },
@@ -35,58 +29,55 @@ public class PersonController : Controller
         new Dish() { DishID = 5, DishName = "Fish and Chips" }
     };
 
+    // GET: Person
+    public IActionResult Persons()
+    {
+        var persons = LoadPersonsFromSession();
+        ViewData["PersonCount"] = persons.Count;
+        return View(persons);
+    }
+
     public IActionResult Create()
     {
-        ViewBag.Dishes = AvailableDishes;
-        return View(new Person());
+        var vm = new PersonCreateViewModel
+        {
+            Person = new Person(),
+            AvailableDishes = AvailableDishes
+        };
+        return View(vm);
     }
 
     [HttpPost]
-    public IActionResult Create(Person person, List<int>? SelectedDishes)
+    [ValidateAntiForgeryToken]
+    public IActionResult Create(PersonCreateViewModel vm)
     {   
         // 1. Kräv minst en dish
-        if (SelectedDishes == null || !SelectedDishes.Any())
+        if (vm.SelectedDishIds == null || !vm.SelectedDishIds.Any())
         {
-            ModelState.AddModelError("SelectedDishes", "Du måste välja minst en signaturrätt.");
+            // Attach the error to the actual property name so it shows up next to the checkbox list
+            ModelState.AddModelError(nameof(vm.SelectedDishIds), "Du måste välja minst en signaturrätt.");
         }
 
         if (!ModelState.IsValid)
         {
-            ViewBag.Dishes = AvailableDishes;
+            vm.AvailableDishes = AvailableDishes;
 
-            return View(person);
+            return View(vm);
         }
         
         // hämta nuvarande lista från session
         var persons = LoadPersonsFromSession();
 
-        // sätt unikt ID
-        if (persons == null || !persons.Any())
+        if (!persons.Any())
         {
             _nextPersonId = 1;
         }
-        person.PersonID = _nextPersonId++;
+        vm.Person.PersonID = _nextPersonId++;
+        vm.Person.PersonDishes = vm.SelectedDishIds
+            .Select(id => new PersonDish(vm.Person.PersonID, id))
+            .ToList();
 
-        person.PersonDishes = new List<PersonDish>();
-        foreach (var dishId in SelectedDishes)
-        {
-            var dish = AvailableDishes.FirstOrDefault(d => d.DishID == dishId);
-            if (dish != null)
-            {
-                person.PersonDishes.Add(new PersonDish
-                {
-                    PersonID = person.PersonID,
-                    DishID = dish.DishID,
-                    Dish = dish
-                });
-            }
-        }
-
-        // lägg till valda rätter
-        persons.Add(person);
-
-
-        // spara tillbaka till session
+        persons.Add(vm.Person);
         SavePersonsToSession(persons);
 
         return RedirectToAction("Persons");
