@@ -73,9 +73,22 @@ public class PersonController : Controller
             _nextPersonId = 1;
         }
         vm.Person.PersonID = _nextPersonId++;
+
         vm.Person.PersonDishes = vm.SelectedDishIds
-            .Select(id => new PersonDish(vm.Person.PersonID, id))
-            .ToList();
+            .Select(id => 
+            {
+            var dish = AvailableDishes.FirstOrDefault(d => d.DishID == id);
+            if (dish == null) return null;
+
+            return new PersonDish
+            {
+                PersonID = vm.Person.PersonID,
+                DishID = dish.DishID,
+                Dish = dish
+            };
+        })
+        .Where(pd => pd != null)
+        .ToList()!;
 
         persons.Add(vm.Person);
         SavePersonsToSession(persons);
