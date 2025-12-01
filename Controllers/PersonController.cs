@@ -33,7 +33,9 @@ public class PersonController : Controller
     public IActionResult Persons()
     {
         var persons = LoadPersonsFromSession();
+        // Provide the person count through both ViewData and ViewBag so views can use either.
         ViewData["PersonCount"] = persons.Count;
+        ViewBag.PersonCount = persons.Count;
         return View(persons);
     }
 

@@ -6,6 +6,11 @@
 }
 
 <h1>Persons</h1>
+@* Demonstrate use of ViewData (existing) and ViewBag (new) — both will show the same value *@
+<div class="mb-3">
+    <br />
+    <strong>Antal personer:</strong> @ViewBag.PersonCount
+</div>
 <a class="create-btn" asp-area="" asp-controller="Person" asp-action="Create">Create new</a>
 <table class="table">
     <thead>
