@@ -131,7 +131,7 @@ public class PersonController : Controller
         if (person != null)
         {
             persons.Remove(person);
-            SavePersonsToSession(persons);   // viktigt!
+            SavePersonsToSession(persons);
         }
 
         return RedirectToAction("Persons");
