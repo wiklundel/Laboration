@@ -1,17 +1,143 @@
-@using Microsoft.AspNetCore.SignalR.Protocol
+@using Laboration.Models
 @model IEnumerable<Laboration.Models.Person>
 
 @{
     ViewData["Title"] = "Persons";
 }
+@{
+    var currentGender = ViewData["CurrentGender"]?.ToString();
+}
+@{
+    var currentSort = ViewData["CurrentSort"]?.ToString();
+}
+
 
 <h1>Persons</h1>
-@* Demonstrate use of ViewData (existing) and ViewBag (new) — both will show the same value *@
 <div class="mb-3">
     <br />
     <strong>Antal personer:</strong> @ViewBag.PersonCount
 </div>
 <a class="create-btn" asp-area="" asp-controller="Person" asp-action="Create">Create new</a>
+
+<form asp-action="Persons" method="get" class="mb-3">
+
+    <!-- Sök på namn -->
+    <div class="mb-2">
+        <label for="searchName">Sök på namn</label>
+        <input type="text" 
+               id="searchName" 
+               name="searchName" 
+               value="@ViewData["CurrentSearch"]"
+               class="form-control" />
+    </div>
+
+    <!-- Filtrera på kön -->
+    <div class="mb-2">
+    <label for="genderFilter">Filtrera på kön</label>
+    <select id="genderFilter" name="genderFilter" class="form-control">
+        @* Alla *@
+        @if (string.IsNullOrEmpty(currentGender))
+        {
+            <option value="" selected>Alla</option>
+        }
+        else
+        {
+            <option value="">Alla</option>
+        }
+
+        @* Kvinna *@
+        @if (currentGender == "Female")
+        {
+            <option value="Female" selected>Kvinna</option>
+        }
+        else
+        {
+            <option value="Female">Kvinna</option>
+        }
+
+        @* Man *@
+        @if (currentGender == "Male")
+        {
+            <option value="Male" selected>Man</option>
+        }
+        else
+        {
+            <option value="Male">Man</option>
+        }
+
+        @* Annat *@
+        @if (currentGender == "Other")
+        {
+            <option value="Other" selected>Annat</option>
+        }
+        else
+        {
+            <option value="Other">Annat</option>
+        }
+    </select>
+</div>
+
+<!-- Sortering -->
+<div class="mb-2">
+    <label for="sortOrder">Sortera</label>
+    <select id="sortOrder" name="sortOrder" class="form-control">
+
+        @* DEFAULT: sortera efter ID *@
+        @if (string.IsNullOrEmpty(currentSort))
+        {
+            <option value="" selected>Standard</option>
+        }
+        else
+        {
+            <option value="">Standard</option>
+        }
+
+        @* Namn A–Ö *@
+        @if (currentSort == "name_asc")
+        {
+            <option value="name_asc" selected>Namn A–Ö</option>
+        }
+        else
+        {
+            <option value="name_asc">Namn A–Ö</option>
+        }
+
+        @* Namn Ö–A *@
+        @if (currentSort == "name_desc")
+        {
+            <option value="name_desc" selected>Namn Ö–A</option>
+        }
+        else
+        {
+            <option value="name_desc">Namn Ö–A</option>
+        }
+
+        @* Ålder stigande *@
+        @if (currentSort == "age_asc")
+        {
+            <option value="age_asc" selected>Ålder stigande</option>
+        }
+        else
+        {
+            <option value="age_asc">Ålder stigande</option>
+        }
+
+        @* Ålder fallande *@
+        @if (currentSort == "age_desc")
+        {
+            <option value="age_desc" selected>Ålder fallande</option>
+        }
+        else
+        {
+            <option value="age_desc">Ålder fallande</option>
+        }
+
+    </select>
+</div>
+
+    <button type="submit" class="btn btn-primary">Filtrera</button>
+</form>
+
 <table class="table">
     <thead>
         <tr>

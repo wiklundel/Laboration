@@ -20,6 +20,7 @@ public class PersonController : Controller
         HttpContext.Session.SetObjectAsJson(SessionKeyPersons, persons);
     }
 
+    // List of dishes
     private static readonly List<Dish> AvailableDishes = new ()
     {
         new Dish() { DishID = 1, DishName = "Spaghetti Bolognese" },
@@ -30,15 +31,48 @@ public class PersonController : Controller
     };
 
     // GET: Person
-    public IActionResult Persons()
+    public IActionResult Persons(string? searchName, Gender? genderFilter, string? sortOrder)
     {
         var persons = LoadPersonsFromSession();
+
+        if(!string.IsNullOrWhiteSpace(searchName))
+        {
+            var lower = searchName.ToLower();
+            persons = persons.
+                        Where(p => (!string.IsNullOrEmpty(p.FirstName) && p.FirstName.ToLower().Contains(lower)) ||
+                                   (!string.IsNullOrEmpty(p.LastName) && p.LastName.ToLower().Contains(lower)))
+                             .ToList();
+        }
+
+        // Filtrering på kön
+        if (genderFilter.HasValue)
+        {
+            persons = persons
+                        .Where(p => p.Gender == genderFilter.Value)
+                        .ToList();
+        }
+
+        // Soretring
+        persons = sortOrder switch
+        {
+            "name_desc" => persons.OrderByDescending(p => p.LastName).ThenByDescending(p => p.FirstName).ToList(),
+            "name_asc"  => persons.OrderBy(p => p.LastName).ThenBy(p => p.FirstName).ToList(),
+            "age_asc"   => persons.OrderBy(p => p.Age).ToList(),
+            "age_desc"  => persons.OrderByDescending(p => p.Age).ToList(),
+            _           => persons.OrderBy(p => p.PersonID).ToList(),
+        };
+
+
+
         // Provide the person count through both ViewData and ViewBag so views can use either.
-        ViewData["PersonCount"] = persons.Count;
+        ViewData["CurrentSearch"] = searchName;
+        ViewData["CurrentGender"] = genderFilter;
+        ViewData["CurrentSort"] = sortOrder;
         ViewBag.PersonCount = persons.Count;
         return View(persons);
     }
 
+    // GET: Create
     public IActionResult Create()
     {
         var vm = new PersonCreateViewModel
@@ -49,6 +83,7 @@ public class PersonController : Controller
         return View(vm);
     }
 
+    // POST: Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Create(PersonCreateViewModel vm)
