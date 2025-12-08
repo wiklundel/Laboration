@@ -132,4 +132,37 @@ public class PersonController : Controller
         PersonDal.Delete(HttpContext, id);
         return RedirectToAction("Persons");
     }
+
+    // GET: Edit
+    public IActionResult Edit(int id)
+    {
+        var person = PersonDal.GetById(HttpContext, id);
+        if (person == null)
+        {
+            return NotFound();
+        }
+
+        var vm = new PersonCreateViewModel
+        {
+            Person = person,
+            AvailableDishes = AvailableDishes,
+            SelectedDishIds = person.PersonDishes?.Select(pd => pd.DishID).ToList() ?? new List<int>()
+        };
+
+        return View(vm);
+    }
+
+    // POST: Edit
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Edit(int id, PersonCreateViewModel vm)
+    {
+        if (!ModelState.IsValid)
+        {
+            vm.AvailableDishes = AvailableDishes;
+            return View(vm);
+        }
+        PersonDal.UpdatePerson(HttpContext, id, vm);
+        return RedirectToAction("Persons");
+    }
 }

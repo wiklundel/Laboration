@@ -1,6 +1,7 @@
 using Laboration.Models;
 using Laboration.Helpers;
 using Microsoft.AspNetCore.Http;
+using Laboration.ViewModels;
 
 namespace Laboration.DAL
 {
@@ -83,6 +84,39 @@ namespace Laboration.DAL
                 }
             }
             nextPersonID = persons.Count + 1;
+            SavePersons(httpContext, persons);
+        }
+
+        public static void UpdatePerson(HttpContext httpContext, int id, PersonCreateViewModel vm)
+        {
+            var persons = GetPersons(httpContext);
+            var personToEdit = persons.FirstOrDefault(p => p.PersonID == id);
+
+            if (personToEdit == null) return;
+            
+            personToEdit.FirstName    = vm.Person.FirstName;
+            personToEdit.LastName     = vm.Person.LastName;
+            personToEdit.Age          = vm.Person.Age;
+            personToEdit.Gender       = vm.Person.Gender;
+
+            var selectedIds = vm.SelectedDishIds ?? new List<int>();
+
+            personToEdit.PersonDishes = selectedIds
+                .Select(dishId =>
+                {
+                    var dish = vm.AvailableDishes.FirstOrDefault(d => d.DishID == dishId);
+                    if (dish == null) return null;
+
+                    return new PersonDish
+                    {
+                        PersonID = personToEdit.PersonID,
+                        DishID   = dish.DishID,
+                        Dish     = dish
+                    };
+                })
+                .Where(pd => pd != null)
+                .ToList()!;
+
             SavePersons(httpContext, persons);
         }
     }

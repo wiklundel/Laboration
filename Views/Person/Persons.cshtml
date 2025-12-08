@@ -17,7 +17,7 @@
     <br />
     <strong>Antal personer:</strong> @ViewBag.PersonCount
 </div>
-<a class="create-btn" asp-area="" asp-controller="Person" asp-action="Create">Create new</a>
+<a class="create-btn" asp-area="" asp-controller="Person" asp-action="Create">Skapa ny</a>
 
 <form asp-action="Persons" method="get" class="mb-3">
 
@@ -141,15 +141,10 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PersonID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
+            <th>ID</th>
+            <th>Förnman</th>
+            <th>Efternamn</th>
+            <th></th>
             <th></th>
             <th></th>
         </tr>
@@ -167,14 +162,16 @@
                 @Html.DisplayFor(modelItem => item.LastName)
             </td>
             <td>
-                <a class="nav-link text-dark" asp-area="" asp-controller="Person" asp-action="Details" asp-route-id="@item.PersonID">Details</a>
+                <a class="nav-link text-dark" asp-controller="Person" asp-action="Details" asp-route-id="@item.PersonID">Detaljer</a>
             </td>
             <td>
                 <a class="nav-link text-dark" asp-controller="Person" asp-action="Delete" asp-route-id="@item.PersonID" class="text-danger">
-                    Delete
+                    Radera
                 </a>
             </td>
-
+            <td>
+                <a class="nav-link text-dark" asp-controller="Person" asp-action="Edit" asp-route-id="@item.PersonID">Ändra</a>
+            </td>
         </tr>
 }
     </tbody>

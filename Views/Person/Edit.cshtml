@@ -1,0 +1,79 @@
+@model Laboration.ViewModels.PersonCreateViewModel
+
+<h1>Redigera person</h1>
+
+<a asp-action="Persons" class="btn btn-secondary mb-3">Tillbaka</a>
+
+<form asp-action="Edit" method="post">
+
+    <!-- Viktigt: behåll ID -->
+    <input type="hidden" asp-for="Person.PersonID" />
+
+    <!-- Kön -->
+    <div class="mb-3">
+        <label class="form-label">Kön</label>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" asp-for="Person.Gender" value="Female" id="genderFemale" />
+            <label class="form-check-label" for="genderFemale">Kvinna</label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" asp-for="Person.Gender" value="Male" id="genderMale" />
+            <label class="form-check-label" for="genderMale">Man</label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" asp-for="Person.Gender" value="Other" id="genderOther" />
+            <label class="form-check-label" for="genderOther">Annat</label>
+        </div>
+
+        <span asp-validation-for="Person.Gender" class="text-danger"></span>
+    </div>
+
+
+    <!-- Förnamn -->
+    <div class="mb-3">
+        <label asp-for="Person.FirstName" class="form-label">Förnamn</label>
+        <input asp-for="Person.FirstName" class="form-control" />
+        <span asp-validation-for="Person.FirstName" class="text-danger"></span>
+    </div>
+
+    <!-- Efternamn -->
+    <div class="mb-3">
+        <label asp-for="Person.LastName" class="form-label">Efternamn</label>
+        <input asp-for="Person.LastName" class="form-control" />
+        <span asp-validation-for="Person.LastName" class="text-danger"></span>
+    </div>
+
+    <!-- Ålder -->
+    <div class="mb-3">
+        <label asp-for="Person.Age" class="form-label">Ålder</label>
+        <input asp-for="Person.Age" type="number" class="form-control" />
+        <span asp-validation-for="Person.Age" class="text-danger"></span>
+    </div>
+
+
+    <!-- Signaturrätter -->
+    <h4>Signaturrätter</h4>
+
+    @foreach (var dish in Model.AvailableDishes)
+    {
+        <div class="form-check mb-2">
+            <input
+                class="form-check-input"
+                type="checkbox"
+                name="SelectedDishIds"
+                value="@dish.DishID"
+                id="dish_@dish.DishID"
+                @(Model.SelectedDishIds.Contains(dish.DishID) ? "checked" : "") />
+
+            <label class="form-check-label" for="dish_@dish.DishID">@dish.DishName</label>
+        </div>
+    }
+
+    <span asp-validation-for="SelectedDishIds" class="text-danger"></span>
+
+    <button type="submit" class="btn btn-primary mt-3">Spara ändringar</button>
+
+</form>
