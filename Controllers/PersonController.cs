@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Laboration.Models;
-using Laboration.Helpers;
 using Laboration.ViewModels;
 using Laboration.DAL;
 
@@ -8,20 +7,21 @@ namespace Laboration.Controllers;
 
 public class PersonController : Controller
 {   
-    // List of dishes
-    private static readonly List<Dish> AvailableDishes = new ()
+    private readonly SqlPersonDal _personDal;
+    public PersonController(IConfiguration config)
     {
-        new Dish() { DishID = 1, DishName = "Spaghetti Bolognese" },
-        new Dish() { DishID = 2, DishName = "Chicken Curry" },
-        new Dish() { DishID = 3, DishName = "Vegetable Stir Fry" },
-        new Dish() { DishID = 4, DishName = "Beef Stroganoff" },
-        new Dish() { DishID = 5, DishName = "Fish and Chips" }
-    };
+        var connStr = config.GetConnectionString("DefaultConnection");
+        if (string.IsNullOrWhiteSpace(connStr))
+        {
+            throw new Exception("ConnectionString 'DefaultConnection' saknas eller är tom.");
+        }
+        _personDal = new SqlPersonDal(connStr);
+    }
 
     // GET: Person
     public IActionResult Persons(string? searchName, Gender? genderFilter, string? sortOrder)
     {
-        var persons = PersonDal.GetPersons(HttpContext);
+        var persons = _personDal.GetPersons();
 
         if(!string.IsNullOrWhiteSpace(searchName))
         {
@@ -64,7 +64,8 @@ public class PersonController : Controller
         var vm = new PersonCreateViewModel
         {
             Person = new Person(),
-            AvailableDishes = AvailableDishes
+            AvailableDishes = _personDal.GetAllDishes(),
+            SelectedDishIds = new List<int>()
         };
         return View(vm);
     }
@@ -82,33 +83,19 @@ public class PersonController : Controller
 
         if (!ModelState.IsValid)
         {
-            vm.AvailableDishes = AvailableDishes;
-
+            vm.AvailableDishes = _personDal.GetAllDishes();
             return View(vm);
         }
 
-        vm.Person.PersonDishes = vm.SelectedDishIds.Select(id =>
-        {
-            var dish = AvailableDishes.FirstOrDefault(d => d.DishID == id);
-            if (dish == null) return null;
+        vm.Person.ImagePath = SaveImage(vm.ImageFile);
 
-            return new PersonDish
-            {
-                DishID = dish.DishID,
-                Dish = dish
-            };
-
-        })
-        .Where(pd => pd != null)
-        .ToList()!;
-
-        PersonDal.AddPerson(HttpContext,  vm.Person);
+        _personDal.AddPerson(vm.Person, vm.SelectedDishIds);
         return RedirectToAction("Persons");
     }
 
     public IActionResult Details(int id)
     {
-        var person = PersonDal.GetById(HttpContext, id);
+        var person = _personDal.GetById(id);
         if (person == null)
         {
             return NotFound();
@@ -119,7 +106,7 @@ public class PersonController : Controller
 
     public IActionResult Delete(int id)
     {
-        var person = PersonDal.GetById(HttpContext, id);
+        var person = _personDal.GetById(id);
         if (person == null)
             return NotFound();
 
@@ -127,16 +114,17 @@ public class PersonController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult DeleteConfirmed(int id)
     {
-        PersonDal.Delete(HttpContext, id);
+        _personDal.DeletePerson(id);
         return RedirectToAction("Persons");
     }
 
     // GET: Edit
     public IActionResult Edit(int id)
     {
-        var person = PersonDal.GetById(HttpContext, id);
+        var person = _personDal.GetById(id);
         if (person == null)
         {
             return NotFound();
@@ -145,7 +133,7 @@ public class PersonController : Controller
         var vm = new PersonCreateViewModel
         {
             Person = person,
-            AvailableDishes = AvailableDishes,
+            AvailableDishes = _personDal.GetAllDishes(),
             SelectedDishIds = person.PersonDishes?.Select(pd => pd.DishID).ToList() ?? new List<int>()
         };
 
@@ -157,12 +145,63 @@ public class PersonController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Edit(int id, PersonCreateViewModel vm)
     {
+        if (vm.SelectedDishIds == null || !vm.SelectedDishIds.Any())
+        {
+            ModelState.AddModelError(nameof(vm.SelectedDishIds), "Du måste välja minst en signaturrätt.");
+        }
+
         if (!ModelState.IsValid)
         {
-            vm.AvailableDishes = AvailableDishes;
+            vm.AvailableDishes = _personDal.GetAllDishes();
             return View(vm);
         }
-        PersonDal.UpdatePerson(HttpContext, id, vm);
+
+        if (vm.ImageFile != null)
+        {
+            vm.Person.ImagePath = SaveImage(vm.ImageFile);
+        }
+
+        _personDal.UpdatePerson(id, vm);
         return RedirectToAction("Persons");
     }
+
+    private string? SaveImage(IFormFile? imageFile)
+    {
+        if (imageFile == null || imageFile.Length == 0)
+            return null;
+
+        var uploadsFolder = Path.Combine("wwwroot", "images");
+        Directory.CreateDirectory(uploadsFolder);
+
+        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(imageFile.FileName)}";
+        var filePath = Path.Combine(uploadsFolder, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            imageFile.CopyTo(stream);
+        }
+
+        return $"/images/{fileName}";
+    }
+    public IActionResult Stats()
+    {
+        var persons = _personDal.GetPersons();
+
+        var dishGroups = persons
+            .SelectMany(p => p.PersonDishes)
+            .GroupBy(pd => pd.Dish.DishName)
+            .Select(g => new
+            {
+                Dish = g.Key,
+                Count = g.Count()
+            })
+            .ToList();
+
+        ViewBag.Labels = dishGroups.Select(d => d.Dish).ToList();
+        ViewBag.Values = dishGroups.Select(d => d.Count).ToList();
+
+        return View();
+    }
+
+
 }

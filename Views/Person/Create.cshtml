@@ -4,7 +4,7 @@
 <h1>Skapa ny person</h1>
 <a class="create-btn" asp-area="" asp-controller="Person" asp-action="Persons">Back</a>
 
-<form asp-action="Create" method="post" class="mt-3">
+<form asp-action="Create" method="post" enctype="multipart/form-data" class="mt-3">
     @Html.AntiForgeryToken()
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -48,6 +48,12 @@
         <label asp-for="Person.Age" class="form-label">Ålder</label>
         <input asp-for="Person.Age" type="number" class="form-control" placeholder="Ålder" />
         <span asp-validation-for="Person.Age" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Profilbild</label>
+        <input type="file" asp-for="ImageFile" class="form-control" />
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
     </div>
 
     <div class="mb-3">

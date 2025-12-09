@@ -1,7 +1,14 @@
 @model Laboration.Models.Person
 
 <h1>@Model.FirstName @Model.LastName</h1>
-<a class="create-btn" asp-area="" asp-controller="Person" asp-action="Persons">Back</a>
+@if (!string.IsNullOrEmpty(Model.ImagePath))
+{
+    <div class="mb-3">
+        <img src="@Model.ImagePath" alt="Profilbild" style="max-width:200px; border-radius:10px;" />
+    </div>
+}
+<a class="btn btn-secondary mb-3" asp-area="" asp-controller="Person" asp-action="Persons">Tillbaka</a>
+
 
 <table class="table mt-4">
     <thead>

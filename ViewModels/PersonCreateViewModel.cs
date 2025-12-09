@@ -12,5 +12,7 @@ namespace Laboration.ViewModels
 
         // De rätter som användaren kryssar i i formuläret
         public List<int> SelectedDishIds { get; set; } = new List<int>();
+        public IFormFile? ImageFile { get; set; }
+
     }
 }

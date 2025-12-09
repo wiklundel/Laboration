@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "Statistik";
+    var labels = (List<string>)ViewBag.Labels;
+    var values = (List<int>)ViewBag.Values;
+}
+
+<h1>Statistik – antal personer per kön</h1>
+
+<canvas id="genderChart" width="400" height="200"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Hämta data från ViewBag
+    const labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(labels));
+    const values = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(values));
+
+    const ctx = document.getElementById('genderChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Antal personer',
+                data: values,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    precision: 0
+                }
+            }
+        }
+    });
+</script>

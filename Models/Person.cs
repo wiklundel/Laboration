@@ -25,6 +25,8 @@ public class Person {
     [Required]
     public Gender Gender { get; set; }
 
+    public string? ImagePath { get; set; }
+
     public List<PersonDish>? PersonDishes { get; set; } = new();
 
     // Konstruktorn
